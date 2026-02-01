@@ -67,9 +67,9 @@ df = load_data(file_path)
 st.sidebar.header("Filters")
 
 date_range = None
-if "stop_date" in df.columns and df["stop_date"].notna().any():
-    min_date = df["stop_date"].min().date()
-    max_date = df["stop_date"].max().date()
+if "stop_datetime" in df.columns and df["stop_datetime"].notna().any():
+    min_date = df["stop_datetime"].min().date()
+    max_date = df["stop_datetime"].max().date()
     date_range = st.sidebar.date_input(
         "Date range", value=(min_date, max_date), min_value=min_date, max_value=max_date
     )
@@ -106,10 +106,10 @@ if (
     date_range
     and isinstance(date_range, tuple)
     and len(date_range) == 2
-    and "stop_date" in fdf.columns
+    and "stop_datetime" in fdf.columns
 ):
     start, end = pd.to_datetime(date_range[0]), pd.to_datetime(date_range[1])
-    fdf = fdf[(fdf["stop_date"] >= start) & (fdf["stop_date"] <= end)]
+    fdf = fdf[(fdf["stop_datetime"] >= start) & (fdf["stop_datetime"] <= end)]
 
 if v_sel != "All" and "violation_raw" in fdf.columns:
     fdf = fdf[fdf["violation_raw"] == v_sel]
@@ -219,7 +219,7 @@ with tab2:
     else:
         st.info("Need 'is_arrested' column.")
 
-    st.subheader("Arrest Rate by Violation (Hover shows counts)")
+    st.subheader("Arrest Rate by Violation ")
     if "violation_raw" in fdf.columns and "is_arrested" in fdf.columns and len(fdf) > 0:
         plot_df = (
             fdf.groupby("violation_raw")
@@ -245,7 +245,7 @@ with tab2:
     else:
         st.info("Need 'violation_raw' and 'is_arrested' columns.")
 
-    st.subheader("Arrest Rate by Gender / Race (Hover shows counts)")
+    st.subheader("Arrest Rate by Gender / Race ")
     c1, c2 = st.columns(2)
 
     with c1:
